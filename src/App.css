@@ -1,0 +1,48 @@
+.App {
+  text-align: center; /* 모든 내용을 가운데 정렬 */
+  min-height: 100vh; /* 뷰포트 높이 전체를 차지하도록 설정 */
+  display: flex;
+  flex-direction: column; /* 요소들을 수직으로 정렬 */
+  justify-content: flex-start; /* 시작 부분에 내용을 정렬 */
+  align-items: center; /* 수평 중앙 정렬 */
+}
+
+main {
+  margin-top: 100px; /* 상단에서 100px 아래로 */
+  width: 100%; /* 너비 100% */
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

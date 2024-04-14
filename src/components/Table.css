@@ -1,0 +1,17 @@
+table {
+  width: auto; /* 너비를 내용에 맞춤 */
+  margin: 0 auto; /* 수포적 중앙 정렬 */
+  border-collapse: collapse; /* 셀 경계선 병합 */
+  table-layout: fixed; /* 테이블 레이아웃 고정 */
+}
+
+td {
+  height: 50px; /* 셀 높이 */
+  width: 50px; /* 셀 높이 */
+  border: 1px solid #ccc; /* 셀 경계선 */
+  background-color: #f9f9f9; /* 기본 배경색 */
+}
+
+td:hover {
+  background-color: #e0e0e0; /* 호버 시 배경색 변경 */
+}
