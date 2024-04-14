@@ -33,19 +33,28 @@ function Table() {
     setCells(newCells);
   }, []);
 
-  const handleMouseDown = (row, col) => {
-    setDragStart({ row, col });
-    setHighlightedCells([{ row, col }]);
+  const handleMouseDown = (row, col, owner) => {
+    setDragStart({ row, col, owner });
+    setHighlightedCells([{ row, col, owner }]);
   };
 
   const handleMouseUp = () => {
     if (dragStart) {
       highlightCells(dragStart, highlightedCells[highlightedCells.length - 1]);
-      handleCellInput();
+      const set = new Set();
+      highlightedCells.forEach((cell) => {
+        set.add(cell.owner);
+      });
+      var isValid = true;
+      if (!set.has(-1) && !set.has(currentPlayer)) isValid = false;
+      set.delete(-1);
+      set.delete(0);
+      set.delete(currentPlayer);
+      if (set.size > 0) isValid = false;
+      if (isValid) handleCellInput();
     }
     setHighlightedCells([]);
     setDragStart(null);
-    changePlayer(); // 플레이어 변경
   };
 
   const handleMouseOver = (row, col) => {
@@ -58,21 +67,19 @@ function Table() {
 
   const highlightCells = (start, end) => {
     const newHighlighted = [];
-    for (
-      let i = Math.min(start.row, end.row);
-      i <= Math.max(start.row, end.row);
-      i++
-    ) {
-      for (
-        let j = Math.min(start.col, end.col);
-        j <= Math.max(start.col, end.col);
-        j++
-      ) {
-        if (start.row === end.row || start.col === end.col) {
-          newHighlighted.push({ row: i, col: j });
-        }
+    const startRow = start.row;
+    const endRow = end.row;
+    const startCol = start.col;
+    const endCol = end.col;
+    const rowIncrement = startRow <= endRow ? 1 : -1;
+    const colIncrement = startCol <= endCol ? 1 : -1;
+
+    for (let i = startRow; i !== endRow + rowIncrement; i += rowIncrement) {
+      for (let j = startCol; j !== endCol + colIncrement; j += colIncrement) {
+        newHighlighted.push({ row: i, col: j, owner: cells[i][j].owner });
       }
     }
+
     setHighlightedCells(newHighlighted);
   };
 
@@ -82,22 +89,26 @@ function Table() {
       setCells((prevCells) => {
         const newCells = [...prevCells];
         let validInput = true; // 입력이 유효한지 확인하는 변수 추가
+        if (inputValue.length === highlightedCells.size) {
+          alert("글자 길이가 다릅니다.");
+          return prevCells;
+        }
 
-        highlightedCells.forEach((cell, index) => {
-          // 기존 문자와 새 문자가 다르면 유효하지 않은 입력으로 처리
-          if (
-            newCells[cell.row][cell.col].char !== "" &&
-            newCells[cell.row][cell.col].char !== inputValue[index]
-          ) {
-            validInput = false;
-          }
-        });
+        if (validInput) {
+          highlightedCells.forEach((cell, index) => {
+            // 기존 문자와 새 문자가 다르면 유효하지 않은 입력으로 처리
+            if (
+              newCells[cell.row][cell.col].char !== "" &&
+              newCells[cell.row][cell.col].char !== inputValue[index]
+            ) {
+              validInput = false;
+            }
+          });
+        }
 
         // 유효하지 않은 입력일 때 처리
         if (!validInput) {
-          alert(
-            "잘못된 입력입니다. 입력된 문자가 이미 존재하는 문자와 다릅니다."
-          );
+          alert("잘못된 입력입니다.");
           return prevCells; // 변경사항 취소하고 이전 상태 유지
         }
 
@@ -112,7 +123,7 @@ function Table() {
             };
           }
         });
-
+        changePlayer();
         return newCells; // 변경된 상태 반환
       });
     }
@@ -148,8 +159,12 @@ function Table() {
                       ? "highlighted"
                       : ""
                   } // owner에 따라 클래스를 동적으로 설정
-                  onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-                  onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
+                  onMouseDown={() =>
+                    handleMouseDown(rowIndex, colIndex, cell.owner)
+                  }
+                  onMouseOver={() =>
+                    handleMouseOver(rowIndex, colIndex, cell.owner)
+                  }
                   onMouseUp={() => handleMouseUp(rowIndex, colIndex)}
                 >
                   {cell.char}
