@@ -46,3 +46,10 @@ main {
     transform: rotate(360deg);
   }
 }
+
+.input-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}

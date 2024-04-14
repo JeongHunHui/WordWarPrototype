@@ -18,9 +18,17 @@ td:hover {
 }
 
 .highlighted {
+  background-color: #fbffd7; /* 강조 표시에 사용할 색 */
+}
+
+.player1 {
   background-color: #d2fdff; /* 강조 표시에 사용할 색 */
 }
 
+.player2 {
+  background-color: #ffd2d2; /* 강조 표시에 사용할 색 */
+}
+
 .special {
-  background-color: #ffd700; /* 'owner'가 -1인 타일의 색 */
+  background-color: #9b9b9b; /* 'owner'가 -1인 타일의 색 */
 }
