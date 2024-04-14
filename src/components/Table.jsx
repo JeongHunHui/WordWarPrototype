@@ -1,13 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Table.css";
-import Cell from "./Cell"; // Cell 컴포넌트 임포트
 
 function Table() {
   const size = 10;
-  const rows = Array.from({ length: size }, (_, index) => index);
-  const cols = rows;
   const [dragStart, setDragStart] = useState(null);
   const [highlightedCells, setHighlightedCells] = useState([]);
+
+  // 각 셀의 정보를 포함하는 상태 초기화
+  const [cells, setCells] = useState([]);
+
+  // 무작위 위치에 한글 문자 배치 및 owner 설정
+  useEffect(() => {
+    const newCells = Array(size)
+      .fill(null)
+      .map(() => Array(size).fill({ char: "", owner: 0 }));
+    const koreanCharacters = "가나다라마바사아자차카타파하"; // 사용할 한글 문자
+    let positions = new Set(); // 중복을 피하기 위해 Set 사용
+
+    // 3개의 고유 위치를 생성
+    while (positions.size < 3) {
+      positions.add(Math.floor(Math.random() * size * size));
+    }
+
+    // Set에 저장된 위치를 사용하여 셀에 문자 배치
+    positions.forEach((pos) => {
+      const row = Math.floor(pos / size);
+      const col = pos % size;
+      newCells[row][col] = {
+        char: koreanCharacters.charAt(
+          Math.floor(Math.random() * koreanCharacters.length)
+        ),
+        owner: -1,
+      };
+    });
+
+    setCells(newCells);
+  }, []);
 
   const handleMouseDown = (row, col) => {
     setDragStart({ row, col });
@@ -56,20 +84,28 @@ function Table() {
   return (
     <table>
       <tbody>
-        {rows.map((row) => (
-          <tr key={row}>
-            {cols.map((col) => (
-              <Cell
-                key={col}
-                row={row}
-                col={col}
-                isHighlighted={highlightedCells.some(
-                  (cell) => cell.row === row && cell.col === col
-                )}
-                onMouseDown={handleMouseDown}
-                onMouseOver={handleMouseOver}
-                onMouseUp={handleMouseUp}
-              />
+        {cells.map((row, rowIndex) => (
+          <tr key={rowIndex}>
+            {row.map((cell, colIndex) => (
+              <td
+                key={colIndex}
+                row={rowIndex}
+                col={colIndex}
+                className={
+                  cell.owner === -1
+                    ? "special"
+                    : highlightedCells.some(
+                        (cell) => cell.row === rowIndex && cell.col === colIndex
+                      )
+                    ? "highlighted"
+                    : ""
+                }
+                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
+                onMouseUp={() => handleMouseUp(rowIndex, colIndex)}
+              >
+                {cell.char}
+              </td>
             ))}
           </tr>
         ))}

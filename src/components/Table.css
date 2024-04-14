@@ -4,3 +4,23 @@ table {
   border-collapse: collapse; /* 셀 경계선 병합 */
   table-layout: fixed; /* 테이블 레이아웃 고정 */
 }
+
+td {
+  height: 50px; /* 셀 높이 */
+  width: 50px; /* 셀 높이 */
+  border: 1px solid #ccc; /* 셀 경계선 */
+  background-color: #f9f9f9; /* 기본 배경색 */
+  user-select: none; /* 텍스트 선택 방지 */
+}
+
+td:hover {
+  background-color: #e0e0e0; /* 호버 시 배경색 변경 */
+}
+
+.highlighted {
+  background-color: #d2fdff; /* 강조 표시에 사용할 색 */
+}
+
+.special {
+  background-color: #ffd700; /* 'owner'가 -1인 타일의 색 */
+}
