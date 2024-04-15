@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Table.css";
 import InputModal from "./InputModal"; // 모달 컴포넌트 불러오기
+import InfoModal from "./InfoModal"; // InfoModal 컴포넌트 불러오기
 
 const apiKey = process.env.REACT_APP_API_KEY;
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -17,6 +18,7 @@ function Table() {
   const [p2score, setP2score] = useState(0);
   const [turn, setTurn] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
   const maxTurn = 16;
 
   useEffect(() => {
@@ -261,11 +263,6 @@ function Table() {
     window.location.reload(); // 현재 페이지 새로고침
   };
 
-  const handleInfo = () => {
-    // 정보 표시 로직 구현
-    alert("Game Info");
-  };
-
   const getTemplate = () => {
     var template = "";
     for (var cell of highlightedCells) {
@@ -282,13 +279,17 @@ function Table() {
   return (
     <div className="game-container">
       <div className="upper-buttons">
-        <button className="button" onClick={handleInfo}>
+        <button className="button" onClick={() => setIsInfoModalOpen(true)}>
           Info
         </button>
         <button className="button" onClick={handleNewGame}>
           New Game
         </button>
       </div>
+      <InfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+      />
       <div className="status-bar">
         {"["}
         {turn >= maxTurn ? maxTurn - 1 : turn} / {maxTurn - 1}턴{"]"}
