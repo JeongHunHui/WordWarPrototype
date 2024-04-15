@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./InputModal.css";
 
-function InputModal({ isOpen, onClose, onSubmit, n }) {
+function InputModal({ isOpen, onClose, onSubmit, getTemplate }) {
   const [inputValue, setInputValue] = useState("");
+  const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const inputRef = useRef(null);
 
@@ -10,11 +11,27 @@ function InputModal({ isOpen, onClose, onSubmit, n }) {
     if (isOpen) {
       setInputValue("");
       setErrorMessage("");
+      setMessage(getTemplate());
       if (inputRef.current) {
         inputRef.current.focus();
       }
+
+      // 키보드 이벤트 핸들러 등록
+      const handleKeyDown = (event) => {
+        if (event.key === "Escape") {
+          onClose();
+        }
+      };
+
+      // 이벤트 리스너 추가
+      document.addEventListener("keydown", handleKeyDown);
+
+      // 컴포넌트가 언마운트되거나 업데이트될 때 이벤트 리스너 제거
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -24,7 +41,7 @@ function InputModal({ isOpen, onClose, onSubmit, n }) {
         <span className="close" onClick={onClose}>
           &times;
         </span>
-        <p>{n}글자를 입력하세요:</p>
+        <p className="message">{message}</p>
         <form>
           <input
             ref={inputRef}

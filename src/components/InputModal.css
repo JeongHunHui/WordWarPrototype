@@ -52,3 +52,8 @@
   color: red;
   margin-top: 10px;
 }
+
+.message {
+  font-size: 24px;
+  font-weight: bold;
+}

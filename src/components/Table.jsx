@@ -20,6 +20,17 @@ function Table() {
   const maxTurn = 16;
 
   useEffect(() => {
+    try {
+      axios.get(apiUrl, {
+        params: {
+          inputValue: "테스트",
+        },
+        headers: {
+          "x-api-key": apiKey,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (e) {}
     const newCells = Array(size)
       .fill(null)
       .map(() => Array(size).fill({ char: "", owner: 0 })); // owner를 -1로 초기화
@@ -255,6 +266,19 @@ function Table() {
     alert("Game Info");
   };
 
+  const getTemplate = () => {
+    var template = "";
+    for (var cell of highlightedCells) {
+      const c = cells[cell.row][cell.col].char;
+      if (c !== "") {
+        template += c;
+      } else {
+        template += "□";
+      }
+    }
+    return template;
+  };
+
   return (
     <div className="game-container">
       <div className="upper-buttons">
@@ -327,7 +351,7 @@ function Table() {
           endDrag();
         }}
         onSubmit={(inputValue) => handleCellInput(inputValue)}
-        n={highlightedCells?.length ? highlightedCells?.length : 0}
+        getTemplate={getTemplate}
       />
     </div>
   );
