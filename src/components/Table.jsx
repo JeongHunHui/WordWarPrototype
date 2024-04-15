@@ -4,6 +4,7 @@ import "./Table.css";
 
 const apiKey = process.env.REACT_APP_API_KEY;
 const apiUrl = process.env.REACT_APP_API_URL;
+const usingWordSet = new Set();
 
 function Table() {
   const size = 10;
@@ -11,15 +12,20 @@ function Table() {
   const [highlightedCells, setHighlightedCells] = useState([]);
   const [cells, setCells] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(1); // 현재 플레이어 번호 추가
+  const [p1score, setP1score] = useState(0);
+  const [p2score, setP2score] = useState(0);
+  const [turn, setTurn] = useState(1);
+  const maxTurn = 11;
 
   useEffect(() => {
     const newCells = Array(size)
       .fill(null)
       .map(() => Array(size).fill({ char: "", owner: 0 })); // owner를 -1로 초기화
-    const koreanCharacters = "가나다라마바사아자차카타파하";
+    const koreanCharacters =
+      "가나다라마바사아자차카타파하기니디리미비시이지치키티피히고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후";
     let positions = new Set();
 
-    while (positions.size < 3) {
+    while (positions.size < 5) {
       positions.add(Math.floor(Math.random() * size * size));
     }
 
@@ -34,15 +40,33 @@ function Table() {
       };
     });
 
+    let wallPositions = new Set();
+
+    while (wallPositions.size < 10) {
+      const randomNum = Math.floor(Math.random() * size * size);
+      if (!positions.has(randomNum)) wallPositions.add(randomNum);
+    }
+
+    wallPositions.forEach((pos) => {
+      const row = Math.floor(pos / size);
+      const col = pos % size;
+      newCells[row][col] = {
+        char: "",
+        owner: -2,
+      };
+    });
+
     setCells(newCells);
   }, []);
 
   const handleMouseDown = (row, col, owner) => {
+    if (turn === maxTurn) return;
     setDragStart({ row, col, owner });
     setHighlightedCells([{ row, col, owner }]);
   };
 
   const handleMouseUp = () => {
+    if (turn === maxTurn) return;
     if (dragStart) {
       highlightCells(dragStart, highlightedCells[highlightedCells.length - 1]);
       const set = new Set();
@@ -66,6 +90,7 @@ function Table() {
   };
 
   const handleMouseOver = (row, col) => {
+    if (turn === maxTurn) return;
     if (dragStart) {
       if (dragStart.row === row || dragStart.col === col) {
         highlightCells(dragStart, { row, col });
@@ -74,12 +99,13 @@ function Table() {
   };
 
   const handleTouchStart = (e, row, col, owner) => {
-    const touch = e.touches[0];
+    if (turn === maxTurn) return;
     setDragStart({ row, col, owner });
     setHighlightedCells([{ row, col, owner }]);
   };
 
   const handleTouchMove = (e) => {
+    if (turn === maxTurn) return;
     e.preventDefault(); // 화면 스크롤 방지
     if (dragStart) {
       const touch = e.touches[0];
@@ -93,6 +119,7 @@ function Table() {
   };
 
   const handleTouchEnd = () => {
+    if (turn === maxTurn) return;
     if (dragStart && highlightedCells.length > 0) {
       highlightCells(dragStart, highlightedCells[highlightedCells.length - 1]);
       const set = new Set();
@@ -134,7 +161,9 @@ function Table() {
   };
 
   const handleCellInput = async () => {
-    const inputValue = window.prompt("Enter character:");
+    const inputValue = window.prompt(
+      `${highlightedCells.length}글자를 입력하세요!`
+    );
     if (inputValue !== null) {
       // 입력이 유효한지 먼저 확인
       if (inputValue.length !== highlightedCells.length) {
@@ -158,6 +187,11 @@ function Table() {
         return;
       }
 
+      if (usingWordSet.has(inputValue)) {
+        alert("이미 사용한 단어입니다.");
+        return;
+      }
+
       // 사전에서 입력값 검사
       try {
         const response = await axios.get(apiUrl, {
@@ -173,6 +207,8 @@ function Table() {
 
         // 사전에 있는 단어인지 확인
         if (definition) {
+          console.log(definition);
+          usingWordSet.add(inputValue);
           setCells((prevCells) => {
             const newCells = [...prevCells];
             // 유효한 입력인 경우에만 셀의 내용을 업데이트
@@ -185,7 +221,11 @@ function Table() {
                 };
               }
             });
+            currentPlayer === 1
+              ? setP1score(p1score + inputValue.length)
+              : setP2score(p2score + inputValue.length);
             changePlayer();
+
             return newCells;
           });
         } else {
@@ -199,12 +239,42 @@ function Table() {
   };
 
   const changePlayer = () => {
-    setCurrentPlayer((prevPlayer) => (prevPlayer === 1 ? 2 : 1));
+    setCurrentPlayer((prevPlayer) => {
+      if (prevPlayer === 2) setTurn(turn + 1);
+      return prevPlayer === 1 ? 2 : 1;
+    });
+  };
+
+  const handleNewGame = () => {
+    // 새 게임을 시작하는 로직 구현
+    console.log("Starting new game...");
+  };
+
+  const handleInfo = () => {
+    // 정보 표시 로직 구현
+    alert("Game Info");
   };
 
   return (
-    <div>
-      <div>현재 플레이어: {currentPlayer}</div>
+    <div className="game-container">
+      <div className="upper-buttons">
+        <button className="button" onClick={handleInfo}>
+          Info
+        </button>
+        <button className="button" onClick={handleNewGame}>
+          New Game
+        </button>
+      </div>
+      <div className="status-bar">
+        {"["}
+        {turn >= maxTurn ? maxTurn - 1 : turn} / {maxTurn - 1}턴{"]"}
+        {turn === maxTurn
+          ? " 게임 종료!"
+          : " 플레이어 " + currentPlayer + "의 턴"}
+      </div>
+      <div className="score-board">
+        플레이어 1: {p1score}점 vs 플레이어 2: {p2score}점
+      </div>
       <table>
         <tbody>
           {cells.map((row, rowIndex) => (
@@ -221,6 +291,8 @@ function Table() {
                       ? "player1"
                       : cell.owner === 2
                       ? "player2"
+                      : cell.owner === -2
+                      ? "wall"
                       : highlightedCells.some(
                           (cell) =>
                             cell.row === rowIndex && cell.col === colIndex

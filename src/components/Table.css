@@ -1,3 +1,32 @@
+.game-container {
+  display: block; /* 블록 레벨 요소로 설정 */
+  width: fit-content; /* 내용에 맞는 너비 설정 */
+  margin: auto; /* 수포적 중앙 정렬 */
+}
+
+.upper-buttons {
+  position: absolute; /* 절대 위치 지정 */
+  top: 10px; /* 상단에서 10px 떨어진 위치 */
+  right: 10px; /* 우측에서 10px 떨어진 위치 */
+  display: flex; /* 플렉스박스 모델 적용 */
+  gap: 10px; /* 버튼 사이의 간격 */
+}
+
+.button {
+  padding: 10px 15px; /* 패딩 설정 */
+  border: none; /* 테두리 없음 */
+  background-color: #4caf50; /* 배경색 */
+  color: white; /* 글자색 */
+  border-radius: 5px; /* 모서리 둥글게 */
+  cursor: pointer; /* 커서 포인터 모양 */
+  font-size: 16px; /* 글자 크기 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 박스 그림자 */
+}
+
+.button:hover {
+  background-color: #45a049; /* 호버 시 색상 변경 */
+}
+
 table {
   width: auto; /* 너비를 내용에 맞춤 */
   margin: 0 auto; /* 수포적 중앙 정렬 */
@@ -11,6 +40,8 @@ td {
   border: 1px solid #ccc; /* 셀 경계선 */
   background-color: #f9f9f9; /* 기본 배경색 */
   user-select: none; /* 텍스트 선택 방지 */
+  font-size: 16px; /* 글자 크기 설정 */
+  font-weight: 550; /* 글자 두께 설정 */
 }
 
 td:hover {
@@ -22,13 +53,35 @@ td:hover {
 }
 
 .player1 {
-  background-color: #d2fdff; /* 강조 표시에 사용할 색 */
+  background-color: #d2fdff;
 }
 
 .player2 {
-  background-color: #ffd2d2; /* 강조 표시에 사용할 색 */
+  background-color: #ffd2d2;
+}
+
+.wall {
+  background-color: #9b9b9b; /* 'owner'가 -2인 타일의 색 */
 }
 
 .special {
-  background-color: #9b9b9b; /* 'owner'가 -1인 타일의 색 */
+  background-color: #bdffcc; /* 'owner'가 -1인 타일의 색 */
+}
+
+.status-bar,
+.score-board {
+  width: 100%; /* 부모 컨테이너의 전체 너비 사용 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  padding: 10px 0; /* 패딩으로 요소 내부 공간 생성 */
+  color: #333; /* 글자색 설정 */
+  font-size: 16px; /* 글자 크기 설정 */
+  font-weight: bold; /* 글자 두께 설정 */
+  margin: 20px 0; /* 위 아래 마진 설정 */
+  background-color: #f3f3f3; /* 배경색 설정 */
+  border-radius: 8px; /* 모서리 둥글게 처리 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 박스 그림자 효과 */
+}
+
+.score-board {
+  background-color: #e9ecef; /* 점수판 배경색 */
 }
