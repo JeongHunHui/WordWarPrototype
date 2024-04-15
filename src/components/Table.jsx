@@ -72,6 +72,44 @@ function Table() {
     }
   };
 
+  const handleTouchStart = (e, row, col, owner) => {
+    const touch = e.touches[0];
+    setDragStart({ row, col, owner });
+    setHighlightedCells([{ row, col, owner }]);
+  };
+
+  const handleTouchMove = (e) => {
+    e.preventDefault(); // 화면 스크롤 방지
+    if (dragStart) {
+      const touch = e.touches[0];
+      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (target && target.getAttribute("row") && target.getAttribute("col")) {
+        const row = parseInt(target.getAttribute("row"), 10);
+        const col = parseInt(target.getAttribute("col"), 10);
+        highlightCells(dragStart, { row, col });
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (dragStart && highlightedCells.length > 0) {
+      highlightCells(dragStart, highlightedCells[highlightedCells.length - 1]);
+      const set = new Set();
+      highlightedCells.forEach((cell) => {
+        set.add(cell.owner);
+      });
+      var isValid = true;
+      if (!set.has(-1) && !set.has(currentPlayer)) isValid = false;
+      set.delete(-1);
+      set.delete(0);
+      set.delete(currentPlayer);
+      if (set.size > 0) isValid = false;
+      if (isValid) handleCellInput();
+    }
+    setHighlightedCells([]);
+    setDragStart(null);
+  };
+
   const highlightCells = (start, end) => {
     const newHighlighted = [];
     const startRow = start.row;
@@ -192,6 +230,11 @@ function Table() {
                     handleMouseOver(rowIndex, colIndex, cell.owner)
                   }
                   onMouseUp={() => handleMouseUp(rowIndex, colIndex)}
+                  onTouchStart={(e) =>
+                    handleTouchStart(e, rowIndex, colIndex, cell.owner)
+                  }
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
                 >
                   {cell.char}
                 </td>
