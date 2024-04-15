@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Table.css";
+
+const apiKey = process.env.REACT_APP_API_KEY;
+const apiUrl = process.env.REACT_APP_API_URL;
 
 function Table() {
   const size = 10;
@@ -47,10 +51,13 @@ function Table() {
       });
       var isValid = true;
       if (!set.has(-1) && !set.has(currentPlayer)) isValid = false;
-      set.delete(-1);
-      set.delete(0);
-      set.delete(currentPlayer);
-      if (set.size > 0) isValid = false;
+      else if (set.size === 1) isValid = false;
+      else {
+        set.delete(-1);
+        set.delete(0);
+        set.delete(currentPlayer);
+        if (set.size > 0) isValid = false;
+      }
       if (isValid) handleCellInput();
     }
     setHighlightedCells([]);
@@ -83,49 +90,68 @@ function Table() {
     setHighlightedCells(newHighlighted);
   };
 
-  const handleCellInput = () => {
+  const handleCellInput = async () => {
     const inputValue = window.prompt("Enter character:");
     if (inputValue !== null) {
-      setCells((prevCells) => {
-        const newCells = [...prevCells];
-        let validInput = true; // 입력이 유효한지 확인하는 변수 추가
-        if (inputValue.length === highlightedCells.size) {
-          alert("글자 길이가 다릅니다.");
-          return prevCells;
-        }
+      // 입력이 유효한지 먼저 확인
+      if (inputValue.length !== highlightedCells.length) {
+        alert("글자 길이가 다릅니다.");
+        return;
+      }
 
-        if (validInput) {
-          highlightedCells.forEach((cell, index) => {
-            // 기존 문자와 새 문자가 다르면 유효하지 않은 입력으로 처리
-            if (
-              newCells[cell.row][cell.col].char !== "" &&
-              newCells[cell.row][cell.col].char !== inputValue[index]
-            ) {
-              validInput = false;
-            }
-          });
+      // 입력된 문자가 기존의 문자와 동일한지 확인
+      let validInput = true;
+      highlightedCells.forEach((cell, index) => {
+        if (
+          cells[cell.row][cell.col].char !== "" &&
+          cells[cell.row][cell.col].char !== inputValue.charAt(index)
+        ) {
+          validInput = false;
         }
-
-        // 유효하지 않은 입력일 때 처리
-        if (!validInput) {
-          alert("잘못된 입력입니다.");
-          return prevCells; // 변경사항 취소하고 이전 상태 유지
-        }
-
-        // 유효한 입력인 경우에만 셀의 내용을 업데이트
-        highlightedCells.forEach((cell, index) => {
-          if (newCells[cell.row][cell.col].owner !== -1) {
-            // owner가 -1이 아닌 경우에만 변경
-            newCells[cell.row][cell.col] = {
-              ...newCells[cell.row][cell.col],
-              char: inputValue[index],
-              owner: currentPlayer, // 현재 플레이어의 소유로 변경
-            };
-          }
-        });
-        changePlayer();
-        return newCells; // 변경된 상태 반환
       });
+
+      if (!validInput) {
+        alert("잘못된 입력입니다.");
+        return;
+      }
+
+      // 사전에서 입력값 검사
+      try {
+        const response = await axios.get(apiUrl, {
+          params: {
+            inputValue: inputValue,
+          },
+          headers: {
+            "x-api-key": apiKey,
+            "Content-Type": "application/json",
+          },
+        });
+        const definition = response?.data?.body;
+
+        // 사전에 있는 단어인지 확인
+        if (definition) {
+          setCells((prevCells) => {
+            const newCells = [...prevCells];
+            // 유효한 입력인 경우에만 셀의 내용을 업데이트
+            highlightedCells.forEach((cell, index) => {
+              if (newCells[cell.row][cell.col].owner !== -1) {
+                newCells[cell.row][cell.col] = {
+                  ...newCells[cell.row][cell.col],
+                  char: inputValue.charAt(index),
+                  owner: currentPlayer,
+                };
+              }
+            });
+            changePlayer();
+            return newCells;
+          });
+        } else {
+          alert("사전에 없는 단어입니다.");
+        }
+      } catch (error) {
+        console.error("Error checking dictionary:", error);
+        alert("사전 조회 중 오류가 발생했습니다.");
+      }
     }
   };
 
