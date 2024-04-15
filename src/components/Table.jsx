@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Table.css";
 import InputModal from "./InputModal"; // 모달 컴포넌트 불러오기
 import InfoModal from "./InfoModal"; // InfoModal 컴포넌트 불러오기
+import Toast from "./Toast"; // Toast 컴포넌트 불러오기
 
 const apiKey = process.env.REACT_APP_API_KEY;
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -19,6 +20,7 @@ function Table() {
   const [turn, setTurn] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [toast, setToast] = useState(null); // 토스트 메시지 상태
   const maxTurn = 16;
 
   useEffect(() => {
@@ -219,8 +221,8 @@ function Table() {
 
         // 사전에 있는 단어인지 확인
         if (definition) {
-          console.log(definition);
           usingWordSet.add(inputValue);
+          setToast({ message: `${inputValue}: ${definition}` });
           setCells((prevCells) => {
             const newCells = [...prevCells];
             // 유효한 입력인 경우에만 셀의 내용을 업데이트
@@ -354,6 +356,9 @@ function Table() {
         onSubmit={(inputValue) => handleCellInput(inputValue)}
         getTemplate={getTemplate}
       />
+      {toast && (
+        <Toast message={toast.message} onClose={() => setToast(null)} />
+      )}
     </div>
   );
 }
