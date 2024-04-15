@@ -51,6 +51,7 @@ function Table() {
       });
       var isValid = true;
       if (!set.has(-1) && !set.has(currentPlayer)) isValid = false;
+      else if (!set.has(0)) isValid = false;
       else if (set.size === 1) isValid = false;
       else {
         set.delete(-1);
@@ -100,10 +101,14 @@ function Table() {
       });
       var isValid = true;
       if (!set.has(-1) && !set.has(currentPlayer)) isValid = false;
-      set.delete(-1);
-      set.delete(0);
-      set.delete(currentPlayer);
-      if (set.size > 0) isValid = false;
+      else if (!set.has(0)) isValid = false;
+      else if (set.size === 1) isValid = false;
+      else {
+        set.delete(-1);
+        set.delete(0);
+        set.delete(currentPlayer);
+        if (set.size > 0) isValid = false;
+      }
       if (isValid) handleCellInput();
     }
     setHighlightedCells([]);
