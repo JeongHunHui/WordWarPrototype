@@ -292,7 +292,17 @@ function Table() {
         isOpen={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
       />
-      <div className="status-bar">
+      <div
+        className="status-bar"
+        style={{
+          backgroundColor:
+            turn >= maxTurn
+              ? "#f3f3f3"
+              : currentPlayer === 1
+              ? "#d2fdff"
+              : "#ffd2d2",
+        }}
+      >
         {"["}
         {turn >= maxTurn ? maxTurn - 1 : turn} / {maxTurn - 1}턴{"]"}
         {turn === maxTurn
