@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Table.css";
+import InputModal from "./InputModal"; // 모달 컴포넌트 불러오기
 
 const apiKey = process.env.REACT_APP_API_KEY;
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -15,6 +16,7 @@ function Table() {
   const [p1score, setP1score] = useState(0);
   const [p2score, setP2score] = useState(0);
   const [turn, setTurn] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const maxTurn = 16;
 
   useEffect(() => {
@@ -83,15 +85,15 @@ function Table() {
         set.delete(currentPlayer);
         if (set.size > 0) isValid = false;
       }
-      if (isValid) handleCellInput();
+      if (isValid) setIsModalOpen(true);
+      else endDrag();
     }
-    setHighlightedCells([]);
-    setDragStart(null);
   };
 
   const handleMouseOver = (row, col) => {
     if (turn === maxTurn) return;
     if (dragStart) {
+      console.log(row, col);
       if (dragStart.row === row || dragStart.col === col) {
         highlightCells(dragStart, { row, col });
       }
@@ -136,8 +138,12 @@ function Table() {
         set.delete(currentPlayer);
         if (set.size > 0) isValid = false;
       }
-      if (isValid) handleCellInput();
+      if (isValid) setIsModalOpen(true);
+      else endDrag();
     }
+  };
+
+  const endDrag = () => {
     setHighlightedCells([]);
     setDragStart(null);
   };
@@ -160,10 +166,7 @@ function Table() {
     setHighlightedCells(newHighlighted);
   };
 
-  const handleCellInput = async () => {
-    const inputValue = window.prompt(
-      `${highlightedCells.length}글자를 입력하세요!`
-    );
+  const handleCellInput = async (inputValue) => {
     if (inputValue !== null) {
       // 입력이 유효한지 먼저 확인
       if (inputValue.length !== highlightedCells.length) {
@@ -225,15 +228,15 @@ function Table() {
               ? setP1score(p1score + inputValue.length)
               : setP2score(p2score + inputValue.length);
             changePlayer();
-
+            endDrag();
             return newCells;
           });
         } else {
-          alert("사전에 없는 단어입니다.");
+          return "사전에 없는 단어입니다.";
         }
       } catch (error) {
         console.error("Error checking dictionary:", error);
-        alert("사전 조회 중 오류가 발생했습니다.");
+        return "사전 조회 중 오류가 발생했습니다.";
       }
     }
   };
@@ -319,6 +322,15 @@ function Table() {
           ))}
         </tbody>
       </table>
+      <InputModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          endDrag();
+        }}
+        onSubmit={(inputValue) => handleCellInput(inputValue)}
+        n={highlightedCells?.length ? highlightedCells?.length : 0}
+      />
     </div>
   );
 }
