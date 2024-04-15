@@ -7,7 +7,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 const usingWordSet = new Set();
 
 function Table() {
-  const size = 10;
+  const size = 13;
   const [dragStart, setDragStart] = useState(null);
   const [highlightedCells, setHighlightedCells] = useState([]);
   const [cells, setCells] = useState([]);
@@ -15,7 +15,7 @@ function Table() {
   const [p1score, setP1score] = useState(0);
   const [p2score, setP2score] = useState(0);
   const [turn, setTurn] = useState(1);
-  const maxTurn = 11;
+  const maxTurn = 16;
 
   useEffect(() => {
     const newCells = Array(size)
@@ -42,7 +42,7 @@ function Table() {
 
     let wallPositions = new Set();
 
-    while (wallPositions.size < 10) {
+    while (wallPositions.size < 20) {
       const randomNum = Math.floor(Math.random() * size * size);
       if (!positions.has(randomNum)) wallPositions.add(randomNum);
     }
@@ -246,8 +246,7 @@ function Table() {
   };
 
   const handleNewGame = () => {
-    // 새 게임을 시작하는 로직 구현
-    console.log("Starting new game...");
+    window.location.reload(); // 현재 페이지 새로고침
   };
 
   const handleInfo = () => {

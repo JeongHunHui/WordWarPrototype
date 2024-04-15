@@ -35,8 +35,8 @@ table {
 }
 
 td {
-  height: 50px; /* 셀 높이 */
-  width: 50px; /* 셀 높이 */
+  height: 40px; /* 셀 높이 */
+  width: 40px; /* 셀 높이 */
   border: 1px solid #ccc; /* 셀 경계선 */
   background-color: #f9f9f9; /* 기본 배경색 */
   user-select: none; /* 텍스트 선택 방지 */
