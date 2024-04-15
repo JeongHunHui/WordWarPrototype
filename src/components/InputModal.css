@@ -4,7 +4,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6); /* Slightly darker */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,13 +12,43 @@
 
 .modal-content {
   background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
+  padding: 25px; /* More padding for a better look */
+  border-radius: 8px; /* More rounded corners */
+  width: 320px; /* Slightly wider */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
   text-align: center;
+}
+
+.modal-content input {
+  width: 90%; /* Full width minus padding */
+  padding: 8px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-content button {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white;
+  padding: 10px 15px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+  background-color: #0056b3; /* Darker shade for hover */
 }
 
 .close {
   float: right;
+  font-size: 24px; /* Larger close button */
   cursor: pointer;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }

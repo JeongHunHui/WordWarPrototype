@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./InputModal.css";
 
 function InputModal({ isOpen, onClose, onSubmit, n }) {
   const [inputValue, setInputValue] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const inputRef = useRef(null);
 
-  // 모달이 열릴 때마다 inputValue를 초기화
   useEffect(() => {
     if (isOpen) {
-      setInputValue(""); // 모달이 열리면 입력값을 초기화
+      setInputValue("");
+      setErrorMessage("");
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   }, [isOpen]);
 
@@ -20,12 +25,26 @@ function InputModal({ isOpen, onClose, onSubmit, n }) {
           &times;
         </span>
         <p>{n}글자를 입력하세요:</p>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <button onClick={() => onSubmit(inputValue)}>Submit</button>
+        <form>
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button
+            type="submit"
+            onClick={async (e) => {
+              e.preventDefault();
+              const result = await onSubmit(inputValue);
+              if (result === "성공") onClose();
+              else setErrorMessage(result);
+            }}
+          >
+            Submit
+          </button>
+        </form>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     </div>
   );

@@ -93,7 +93,6 @@ function Table() {
   const handleMouseOver = (row, col) => {
     if (turn === maxTurn) return;
     if (dragStart) {
-      console.log(row, col);
       if (dragStart.row === row || dragStart.col === col) {
         highlightCells(dragStart, { row, col });
       }
@@ -170,8 +169,7 @@ function Table() {
     if (inputValue !== null) {
       // 입력이 유효한지 먼저 확인
       if (inputValue.length !== highlightedCells.length) {
-        alert("글자 길이가 다릅니다.");
-        return;
+        return "글자 길이가 다릅니다.";
       }
 
       // 입력된 문자가 기존의 문자와 동일한지 확인
@@ -186,13 +184,11 @@ function Table() {
       });
 
       if (!validInput) {
-        alert("잘못된 입력입니다.");
-        return;
+        return "잘못된 입력입니다.";
       }
 
       if (usingWordSet.has(inputValue)) {
-        alert("이미 사용한 단어입니다.");
-        return;
+        return "이미 사용한 단어입니다.";
       }
 
       // 사전에서 입력값 검사
@@ -238,7 +234,9 @@ function Table() {
         console.error("Error checking dictionary:", error);
         return "사전 조회 중 오류가 발생했습니다.";
       }
+      return "성공";
     }
+    return "잘못된 입력입니다.";
   };
 
   const changePlayer = () => {
