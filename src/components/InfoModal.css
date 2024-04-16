@@ -9,6 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 10;
 }
 
 .modal-content {
@@ -23,4 +24,27 @@
   float: right;
   font-size: 24px;
   cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul > li {
+  margin: 0.5rem;
+  color: #626262;
+}
+
+ul > li:nth-child(2) {
+  font-weight: 500;
+  margin-top: 1rem;
+  color: #000;
+}
+
+.page {
+  width: 100%;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-around;
 }

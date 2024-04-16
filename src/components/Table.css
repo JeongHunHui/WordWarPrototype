@@ -1,19 +1,22 @@
 .game-container {
   display: flex; /* Flexbox 레이아웃 설정 */
   flex-direction: column; /* 자식 요소를 세로 방향으로 정렬 */
-  justify-content: center; /* 수평 방향으로 중앙 정렬 */
   align-items: center; /* 수직 방향으로 중앙 정렬 */
-  height: 100vh; /* 뷰포트 높이의 100%로 설정 */
-  width: fit-content; /* 내용에 맞는 너비 설정 */
+  height: fit-content;
+  min-height: 100vh; /* 뷰포트 높이의 100%로 설정 */
+  width: 100%; /* 내용에 맞는 너비 설정 */
   margin: auto; /* 수포적 중앙 정렬 */
+  padding-top: 1rem;
+  background-color: #fafafa;
 }
 
 .upper-buttons {
-  position: absolute; /* 절대 위치 지정 */
-  top: 10px; /* 상단에서 10px 떨어진 위치 */
-  right: 10px; /* 우측에서 10px 떨어진 위치 */
-  display: flex; /* 플렉스박스 모델 적용 */
-  gap: 10px; /* 버튼 사이의 간격 */
+  max-width: 600px;
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-right: 1.5rem;
 }
 
 .button {
@@ -31,25 +34,56 @@
   background-color: #45a049; /* 호버 시 색상 변경 */
 }
 
-table {
-  width: auto; /* 너비를 내용에 맞춤 */
-  margin: 0 auto; /* 수포적 중앙 정렬 */
-  border-collapse: collapse; /* 셀 경계선 병합 */
-  table-layout: fixed; /* 테이블 레이아웃 고정 */
+.table-wrapper {
+  position: relative;
+
+  width: 100%;
+  height: 340px;
+  overflow-x: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.table::-webkit-scrollbar {
+  display: none;
 }
 
-td {
-  height: 40px; /* 셀 높이 */
-  width: 40px; /* 셀 높이 */
-  border: 1px solid #ccc; /* 셀 경계선 */
-  background-color: #f9f9f9; /* 기본 배경색 */
+.table {
+  position: absolute;
+  top: 0;
+  left: calc(50vw - 340px / 2);
+
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  flex-flow: column;
+  padding: 1rem;
+  border: 2px solid #000;
+  background-color: rgb(166, 168, 166);
+  touch-action: none; /* disable mobile swipe scroll */
+}
+
+.tableRow {
+  display: flex;
+}
+
+.tableCell {
+  margin: 1px;
+  width: 36px;
+  height: 36px;
+  background-color: #fafafa; /* 기본 배경색 */
   user-select: none; /* 텍스트 선택 방지 */
   font-size: 16px; /* 글자 크기 설정 */
-  font-weight: 550; /* 글자 두께 설정 */
+  font-weight: 500; /* 글자 두께 설정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
 }
 
-td:hover {
-  background-color: #e0e0e0; /* 호버 시 배경색 변경 */
+@media (hover: hover) and (pointer: fine) {
+  .tableCell:not(.wall):hover {
+    background-color: #e0e0e0; /* 호버 시 배경색 변경 */
+  }
 }
 
 .highlighted {
@@ -57,7 +91,7 @@ td:hover {
 }
 
 .player1 {
-  background-color: #d2fdff;
+  background-color: #d0ebff;
 }
 
 .player2 {
@@ -65,7 +99,9 @@ td:hover {
 }
 
 .wall {
-  background-color: #9b9b9b; /* 'owner'가 -2인 타일의 색 */
+  background: transparent;
+
+  /* background-color: #9b9b9b; /* 'owner'가 -2인 타일의 색 */
 }
 
 .special {
@@ -79,13 +115,90 @@ td:hover {
   padding: 10px 0; /* 패딩으로 요소 내부 공간 생성 */
   color: #333; /* 글자색 설정 */
   font-size: 16px; /* 글자 크기 설정 */
-  font-weight: bold; /* 글자 두께 설정 */
   margin: 20px 0; /* 위 아래 마진 설정 */
   background-color: #f3f3f3; /* 배경색 설정 */
-  border-radius: 8px; /* 모서리 둥글게 처리 */
+  border-radius: 0 0 8px 8px; /* 모서리 둥글게 처리 */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 박스 그림자 효과 */
 }
 
-.score-board {
-  background-color: #e9ecef; /* 점수판 배경색 */
+.player-info {
+  width: 100%;
+  max-width: 600px;
+  padding: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.5rem;
+}
+
+.player-info > div {
+  width: 40%;
+  padding: 0.5rem 0;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-info > div span:nth-child(1) {
+  padding-bottom: 0.25rem;
+  font-size: 1.25rem;
+}
+.player-info > div span:nth-child(2) {
+  font-size: 13px;
+}
+
+.player-info > div.player-1 {
+  background-color: rgba(208, 235, 255, 0.5);
+  transform: scale(0.95);
+  transition-duration: scale 0.5s;
+}
+
+.player-info > div.player-1.active {
+  background-color: rgba(208, 235, 255, 1);
+  box-shadow: 0 0 0 0 rgba(208, 235, 255, 1);
+  transform: scale(1);
+  animation: pulse-1 1.25s ease-out infinite;
+}
+
+.player-info > div.player-2 {
+  background-color: rgba(255, 210, 210, 0.5);
+  transform: scale(0.95);
+}
+
+.player-info > div.player-2.active {
+  background-color: rgba(255, 210, 210, 1);
+  box-shadow: 0 0 0 0 rgba(255, 210, 210, 1);
+  transform: scale(1);
+  animation: pulse-2 1.25s ease-out infinite;
+  transition-duration: scale 0.5s;
+}
+
+.feedback {
+  padding: 1rem 0 1rem 0;
+}
+
+@keyframes pulse-1 {
+  0% {
+    box-shadow: 0 0 0 0 rgba(208, 235, 255, 1);
+  }
+  30% {
+    box-shadow: 0 0 0 7px rgba(208, 235, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 9px rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes pulse-2 {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 210, 210, 1);
+  }
+  30% {
+    box-shadow: 0 0 0 7px rgba(255, 210, 210, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 9px rgba(255, 255, 255, 0);
+  }
 }
