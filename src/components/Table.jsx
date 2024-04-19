@@ -33,6 +33,7 @@ function Table() {
     defaultStartLetterCount
   );
   const [maxTurn, setMaxTurn] = useState(defaultMaxTurn);
+  const [isDragging, setIsDragging] = useState(false);
 
   const koreanCharacters =
     "가개경고공과구국그기나노다대도동라레로리마만면명모무문물미민반바발보부비사산상새서선성소수스시신아양어에오우원유의이인일임자장전정적제주중지진조차천초카크코타트파포프하한해화호";
@@ -120,12 +121,14 @@ function Table() {
 
   const handleMouseDown = (row, col, owner) => {
     if (turn === maxTurn + 1) return;
+    setIsDragging(true);
     setDragStart({ row, col, owner });
     setHighlightedCells([{ row, col, owner }]);
   };
 
   const handleMouseUp = () => {
     if (turn === maxTurn + 1) return;
+    setIsDragging(false);
     if (dragStart) {
       highlightCells(dragStart, highlightedCells[highlightedCells.length - 1]);
       const set = new Set();
@@ -158,6 +161,7 @@ function Table() {
 
   const handleTouchStart = (e, row, col, owner) => {
     if (turn === maxTurn + 1) return;
+    setIsDragging(true);
     setDragStart({ row, col, owner });
     setHighlightedCells([{ row, col, owner }]);
   };
@@ -177,6 +181,7 @@ function Table() {
 
   const handleTouchEnd = () => {
     if (turn === maxTurn + 1) return;
+    setIsDragging(false);
     if (dragStart && highlightedCells.length > 0) {
       highlightCells(dragStart, highlightedCells[highlightedCells.length - 1]);
       const set = new Set();
@@ -319,13 +324,13 @@ function Table() {
   };
 
   const handleMouseLeave = () => {
-    if (turn === maxTurn + 1) return;
-    endDrag(); // This will reset the highlighted cells and any ongoing drag state
+    if (turn === maxTurn + 1 || !isDragging) return;
+    endDrag();
   };
 
   const handleTouchCancel = () => {
-    if (turn === maxTurn + 1) return;
-    endDrag(); // This will reset the highlighted cells and any ongoing drag state
+    if (turn === maxTurn + 1 || !isDragging) return;
+    endDrag();
   };
 
   const changePlayer = () => {
