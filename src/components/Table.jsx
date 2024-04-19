@@ -27,31 +27,39 @@ function Table() {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(true);
   const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
   const [toast, setToast] = useState(null); // 토스트 메시지 상태
+  const [size, setSize] = useState(defaultSize);
+  const [wallCount, setWallCount] = useState(defaultWallCount);
+  const [startLetterCount, setStartLetterCount] = useState(
+    defaultStartLetterCount
+  );
   const [maxTurn, setMaxTurn] = useState(defaultMaxTurn);
 
   const koreanCharacters =
     "가개경고공과구국그기나노다대도동라레로리마만면명모무문물미민반바발보부비사산상새서선성소수스시신아양어에오우원유의이인일임자장전정적제주중지진조차천초카크코타트파포프하한해화호";
 
-  const initGame = (size, maxTurn, wallCount, startLetterCount) => {
+  const initGame = (_size, _maxTurn, _wallCount, _startLetterCount) => {
     usingWordSet.clear();
     setCurrentPlayer(1);
     setTurn(1);
     setP1score(0);
     setP2score(0);
-    setMaxTurn(maxTurn);
+    setSize(_size);
+    setWallCount(_wallCount);
+    setStartLetterCount(_startLetterCount);
+    setMaxTurn(_maxTurn);
 
-    const newCells = Array(size)
+    const newCells = Array(_size)
       .fill(null)
-      .map(() => Array(size).fill({ char: "", owner: 0 }));
+      .map(() => Array(_size).fill({ char: "", owner: 0 }));
     let positions = new Set();
 
-    while (positions.size < startLetterCount) {
-      positions.add(Math.floor(Math.random() * size * size));
+    while (positions.size < _startLetterCount) {
+      positions.add(Math.floor(Math.random() * _size * _size));
     }
 
     positions.forEach((pos) => {
-      const row = Math.floor(pos / size);
-      const col = pos % size;
+      const row = Math.floor(pos / _size);
+      const col = pos % _size;
       newCells[row][col] = {
         char: koreanCharacters.charAt(
           Math.floor(Math.random() * koreanCharacters.length)
@@ -62,14 +70,14 @@ function Table() {
 
     let wallPositions = new Set();
 
-    while (wallPositions.size < wallCount) {
-      const randomNum = Math.floor(Math.random() * size * size);
+    while (wallPositions.size < _wallCount) {
+      const randomNum = Math.floor(Math.random() * _size * _size);
       if (!positions.has(randomNum)) wallPositions.add(randomNum);
     }
 
     wallPositions.forEach((pos) => {
-      const row = Math.floor(pos / size);
-      const col = pos % size;
+      const row = Math.floor(pos / _size);
+      const col = pos % _size;
       newCells[row][col] = {
         char: "",
         owner: -2,
@@ -80,12 +88,7 @@ function Table() {
   };
 
   useEffect(() => {
-    initGame(
-      defaultSize,
-      defaultMaxTurn,
-      defaultWallCount,
-      defaultStartLetterCount
-    );
+    initGame(size, maxTurn, wallCount, startLetterCount);
   }, []);
 
   const handleMouseDown = (row, col, owner) => {
@@ -275,7 +278,7 @@ function Table() {
   };
 
   const handleNewGame = () => {
-    initGame();
+    initGame(size, maxTurn, wallCount, startLetterCount);
   };
 
   const settingBoard = () => {

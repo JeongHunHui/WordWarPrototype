@@ -24,7 +24,7 @@ function SettingModal({ isOpen, onClose, initGame }) {
         <h2>게임 설정</h2>
         <form onSubmit={(e) => e.preventDefault()}>
           <label>
-            맵 크기{"(N x N)"}
+            <span>맵 크기{"(N x N)"}</span>
             <input
               type="number"
               value={size}
@@ -33,7 +33,7 @@ function SettingModal({ isOpen, onClose, initGame }) {
           </label>
           <br />
           <label>
-            턴 제한
+            <span>턴 제한</span>
             <input
               type="number"
               value={maxTurn}
@@ -42,7 +42,7 @@ function SettingModal({ isOpen, onClose, initGame }) {
           </label>
           <br />
           <label>
-            벽 개수
+            <span>벽 개수</span>
             <input
               type="number"
               value={wallCount}
@@ -51,7 +51,7 @@ function SettingModal({ isOpen, onClose, initGame }) {
           </label>
           <br />
           <label>
-            시작 글자 수
+            <span>시작 글자 수</span>
             <input
               type="number"
               value={startLetterCount}
@@ -59,7 +59,9 @@ function SettingModal({ isOpen, onClose, initGame }) {
             />
           </label>
           <br />
-          <button onClick={handleSubmit}>게임 시작!</button>
+          <button className="newStart" onClick={handleSubmit}>
+            바뀐 설정으로 게임 시작!
+          </button>
         </form>
       </div>
     </div>
