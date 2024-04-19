@@ -1,6 +1,6 @@
 // InfoModal.js
-import { useState } from 'react';
-import './InfoModal.css'; // 스타일 파일, 필요에 따라 수정
+import { useState } from "react";
+import "./InfoModal.css"; // 스타일 파일, 필요에 따라 수정
 
 function InfoModal({ isOpen, onClose }) {
   const [page, setPage] = useState(0);
@@ -49,7 +49,7 @@ function InfoModal({ isOpen, onClose }) {
         <div className="page">
           <div
             onClick={() => setPage((pre) => Math.max(0, pre - 1))}
-            style={{ color: page === 0 ? 'gray' : 'black', cursor: 'pointer' }}
+            style={{ color: page === 0 ? "gray" : "black", cursor: "pointer" }}
           >
             이전
           </div>
@@ -62,9 +62,9 @@ function InfoModal({ isOpen, onClose }) {
                   }
                 : () => setPage((pre) => pre + 1)
             }
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
-            {page === 2 ? '알겠어요' : '다음'}
+            {page === 2 ? "알겠어요" : "다음"}
           </div>
         </div>
       </div>

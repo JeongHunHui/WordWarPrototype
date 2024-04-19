@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Table.css";
 import InputModal from "./InputModal"; // 모달 컴포넌트 불러오기
 import InfoModal from "./InfoModal"; // InfoModal 컴포넌트 불러오기
+import SettingModal from "./SettingModal";
 import Toast from "./Toast"; // Toast 컴포넌트 불러오기
 
 const apiKey = process.env.REACT_APP_API_KEY;
@@ -19,7 +20,8 @@ function Table() {
   const [p2score, setP2score] = useState(0);
   const [turn, setTurn] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(true);
+  const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
   const [toast, setToast] = useState(null); // 토스트 메시지 상태
   const maxTurn = 21;
 
@@ -267,6 +269,10 @@ function Table() {
     window.location.reload(); // 현재 페이지 새로고침
   };
 
+  const settingBoard = () => {
+    setIsSettingModalOpen(true);
+  };
+
   const getTemplate = () => {
     var template = "";
     for (var cell of highlightedCells) {
@@ -290,15 +296,22 @@ function Table() {
       </div>
       <div className="upper-buttons">
         <button className="button" onClick={() => setIsInfoModalOpen(true)}>
-          튜토리얼
+          게임 방법
         </button>
         <button className="button" onClick={handleNewGame}>
-          리셋
+          게임 재시작
+        </button>
+        <button className="button" onClick={settingBoard}>
+          게임 설정
         </button>
       </div>
       <InfoModal
         isOpen={isInfoModalOpen}
         onClose={() => setIsInfoModalOpen(false)}
+      />
+      <SettingModal
+        isOpen={isSettingModalOpen}
+        onClose={() => setIsSettingModalOpen(false)}
       />
       <div
         className="status-bar"
