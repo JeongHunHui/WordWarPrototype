@@ -318,6 +318,16 @@ function Table() {
     return "잘못된 입력입니다.";
   };
 
+  const handleMouseLeave = () => {
+    if (turn === maxTurn + 1) return;
+    endDrag(); // This will reset the highlighted cells and any ongoing drag state
+  };
+
+  const handleTouchCancel = () => {
+    if (turn === maxTurn + 1) return;
+    endDrag(); // This will reset the highlighted cells and any ongoing drag state
+  };
+
   const changePlayer = () => {
     setCurrentPlayer((prevPlayer) => {
       setTurn(turn + 1);
@@ -414,7 +424,11 @@ function Table() {
         </div>
       </div>
       <div className="table-wrapper">
-        <div className="table">
+        <div
+          className="table"
+          onMouseLeave={handleMouseLeave}
+          onTouchCancel={handleTouchCancel}
+        >
           {cells.map((row, rowIndex) => (
             <div className="tableRow" key={rowIndex}>
               {row.map((cell, colIndex) => (
