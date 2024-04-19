@@ -6,7 +6,6 @@
   min-height: 100vh; /* 뷰포트 높이의 100%로 설정 */
   width: 100%; /* 내용에 맞는 너비 설정 */
   margin: auto; /* 수포적 중앙 정렬 */
-  padding-top: 1rem;
   background-color: #fafafa;
 }
 
@@ -176,7 +175,7 @@
 }
 
 .feedback {
-  padding: 1rem 0 1rem 0;
+  padding: 2rem 0 1rem 0;
 }
 
 @keyframes pulse-1 {

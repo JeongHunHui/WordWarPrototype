@@ -5,8 +5,5 @@
   flex-direction: column; /* 요소들을 수직으로 정렬 */
   justify-content: flex-start; /* 시작 부분에 내용을 정렬 */
   align-items: center; /* 수평 중앙 정렬 */
-}
-
-main {
   width: 100%; /* 너비 100% */
 }
