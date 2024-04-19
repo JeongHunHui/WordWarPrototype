@@ -251,7 +251,7 @@ function Table() {
 
       // 사전에서 입력값 검사
       try {
-        const response = await axios.get(apiUrl, {
+        var response = await axios.get(apiUrl, {
           params: {
             inputValue: inputValue,
           },
@@ -260,10 +260,26 @@ function Table() {
             "Content-Type": "application/json",
           },
         });
-        const definition = response?.data?.body;
+
+        if (
+          response.data?.errorMessage &&
+          JSON.parse(response.data?.errorMessage).statusCode === 500
+        ) {
+          console.log("콜드 스타트 문제 발생");
+          response = await axios.get(apiUrl, {
+            params: {
+              inputValue: inputValue,
+            },
+            headers: {
+              "x-api-key": apiKey,
+              "Content-Type": "application/json",
+            },
+          });
+        }
 
         // 사전에 있는 단어인지 확인
-        if (definition) {
+        if (response?.data?.body) {
+          const definition = response?.data?.body;
           usingWordSet.add(inputValue);
           setToast({ message: `${inputValue}: ${definition}` });
           setCells((prevCells) => {
@@ -285,8 +301,13 @@ function Table() {
             endDrag();
             return newCells;
           });
-        } else {
+        } else if (
+          response.data?.errorMessage &&
+          JSON.parse(response.data?.errorMessage).statusCode === 404
+        ) {
           return "사전에 없는 단어입니다.";
+        } else {
+          throw Error();
         }
       } catch (error) {
         console.error("Error checking dictionary:", error);
