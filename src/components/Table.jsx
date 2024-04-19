@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './Table.css';
-import InputModal from './InputModal'; // 모달 컴포넌트 불러오기
-import InfoModal from './InfoModal'; // InfoModal 컴포넌트 불러오기
-import Toast from './Toast'; // Toast 컴포넌트 불러오기
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./Table.css";
+import InputModal from "./InputModal"; // 모달 컴포넌트 불러오기
+import InfoModal from "./InfoModal"; // InfoModal 컴포넌트 불러오기
+import Toast from "./Toast"; // Toast 컴포넌트 불러오기
 
 const apiKey = process.env.REACT_APP_API_KEY;
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -27,19 +27,19 @@ function Table() {
     try {
       axios.get(apiUrl, {
         params: {
-          inputValue: '테스트',
+          inputValue: "테스트",
         },
         headers: {
-          'x-api-key': apiKey,
-          'Content-Type': 'application/json',
+          "x-api-key": apiKey,
+          "Content-Type": "application/json",
         },
       });
     } catch (e) {}
     const newCells = Array(size)
       .fill(null)
-      .map(() => Array(size).fill({ char: '', owner: 0 })); // owner를 -1로 초기화
+      .map(() => Array(size).fill({ char: "", owner: 0 })); // owner를 -1로 초기화
     const koreanCharacters =
-      '가나다라마바사아자차카타파하기니디리미비시이지치키티피히고노도로모보소오조초코토포호구누두루무부수우주추쿠투푸후';
+      "가개경고공과구국그기나노다대도동라레로리마만면명모무문물미민반바발보부비사산상새서선성소수스시신아양어에오우원유의이인일임자장전정적제주중지진조차천초카크코타트파포프하한해화호";
     let positions = new Set();
 
     while (positions.size < 4) {
@@ -69,7 +69,7 @@ function Table() {
       const row = Math.floor(pos / size);
       const col = pos % size;
       newCells[row][col] = {
-        char: '',
+        char: "",
         owner: -2,
       };
     });
@@ -126,9 +126,9 @@ function Table() {
     if (dragStart) {
       const touch = e.touches[0];
       const target = document.elementFromPoint(touch.clientX, touch.clientY);
-      if (target && target.getAttribute('row') && target.getAttribute('col')) {
-        const row = parseInt(target.getAttribute('row'), 10);
-        const col = parseInt(target.getAttribute('col'), 10);
+      if (target && target.getAttribute("row") && target.getAttribute("col")) {
+        const row = parseInt(target.getAttribute("row"), 10);
+        const col = parseInt(target.getAttribute("col"), 10);
         highlightCells(dragStart, { row, col });
       }
     }
@@ -186,14 +186,14 @@ function Table() {
     if (inputValue !== null) {
       // 입력이 유효한지 먼저 확인
       if (inputValue.length !== highlightedCells.length) {
-        return '글자 길이가 다릅니다.';
+        return "글자 길이가 다릅니다.";
       }
 
       // 입력된 문자가 기존의 문자와 동일한지 확인
       let validInput = true;
       highlightedCells.forEach((cell, index) => {
         if (
-          cells[cell.row][cell.col].char !== '' &&
+          cells[cell.row][cell.col].char !== "" &&
           cells[cell.row][cell.col].char !== inputValue.charAt(index)
         ) {
           validInput = false;
@@ -201,11 +201,11 @@ function Table() {
       });
 
       if (!validInput) {
-        return '잘못된 입력입니다.';
+        return "잘못된 입력입니다.";
       }
 
       if (usingWordSet.has(inputValue)) {
-        return '이미 사용한 단어입니다.';
+        return "이미 사용한 단어입니다.";
       }
 
       // 사전에서 입력값 검사
@@ -215,8 +215,8 @@ function Table() {
             inputValue: inputValue,
           },
           headers: {
-            'x-api-key': apiKey,
-            'Content-Type': 'application/json',
+            "x-api-key": apiKey,
+            "Content-Type": "application/json",
           },
         });
         const definition = response?.data?.body;
@@ -245,15 +245,15 @@ function Table() {
             return newCells;
           });
         } else {
-          return '사전에 없는 단어입니다.';
+          return "사전에 없는 단어입니다.";
         }
       } catch (error) {
-        console.error('Error checking dictionary:', error);
-        return '사전 조회 중 오류가 발생했습니다.';
+        console.error("Error checking dictionary:", error);
+        return "사전 조회 중 오류가 발생했습니다.";
       }
-      return '성공';
+      return "성공";
     }
-    return '잘못된 입력입니다.';
+    return "잘못된 입력입니다.";
   };
 
   const changePlayer = () => {
@@ -268,13 +268,13 @@ function Table() {
   };
 
   const getTemplate = () => {
-    var template = '';
+    var template = "";
     for (var cell of highlightedCells) {
       const c = cells[cell.row][cell.col].char;
-      if (c !== '') {
+      if (c !== "") {
         template += c;
       } else {
-        template += '□';
+        template += "□";
       }
     }
     return template;
@@ -305,32 +305,32 @@ function Table() {
         style={{
           backgroundColor:
             turn >= maxTurn
-              ? '#f3f3f3'
+              ? "#f3f3f3"
               : currentPlayer === 1
-              ? '#d0ebff'
-              : '#ffd2d2',
+              ? "#d0ebff"
+              : "#ffd2d2",
         }}
       >
-        {'['}
-        {turn >= maxTurn ? maxTurn - 1 : turn} / {maxTurn - 1}턴{']'}
+        {"["}
+        {turn >= maxTurn ? maxTurn - 1 : turn} / {maxTurn - 1}턴{"]"}
         {turn === maxTurn
-          ? ' 게임 종료!'
-          : ' 유저 ' + currentPlayer + '의 차례'}
+          ? " 게임 종료!"
+          : " 유저 " + currentPlayer + "의 차례"}
       </div>
       <div className="player-info">
-        <div className={'player-1 ' + (currentPlayer === 1 ? 'active' : '')}>
+        <div className={"player-1 " + (currentPlayer === 1 ? "active" : "")}>
           <span>{p1score}점</span>
           <span>
             <strong>유저 1</strong> &lt;
-            {currentPlayer === 1 ? '내 차례!' : '상대 차례'}
+            {currentPlayer === 1 ? "내 차례!" : "상대 차례"}
             &gt;
           </span>
         </div>
-        <div className={'player-2 ' + (currentPlayer === 2 ? 'active' : '')}>
+        <div className={"player-2 " + (currentPlayer === 2 ? "active" : "")}>
           <span>{p2score}점</span>
           <span>
             <strong>유저 2</strong> &lt;
-            {currentPlayer === 2 ? '내 차례!' : '상대 차례'}
+            {currentPlayer === 2 ? "내 차례!" : "상대 차례"}
             &gt;
           </span>
         </div>
@@ -345,21 +345,21 @@ function Table() {
                   row={rowIndex}
                   col={colIndex}
                   className={
-                    'tableCell ' +
+                    "tableCell " +
                     (cell.owner === -1
-                      ? 'special'
+                      ? "special"
                       : cell.owner === 1
-                      ? 'player1'
+                      ? "player1"
                       : cell.owner === 2
-                      ? 'player2'
+                      ? "player2"
                       : cell.owner === -2
-                      ? 'wall'
+                      ? "wall"
                       : highlightedCells.some(
                           (cell) =>
                             cell.row === rowIndex && cell.col === colIndex
                         )
-                      ? 'highlighted'
-                      : '')
+                      ? "highlighted"
+                      : "")
                   } // owner에 따라 클래스를 동적으로 설정
                   onMouseDown={() =>
                     handleMouseDown(rowIndex, colIndex, cell.owner)
