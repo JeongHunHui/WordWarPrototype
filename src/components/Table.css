@@ -111,6 +111,7 @@
   padding: 10px 0; /* 패딩으로 요소 내부 공간 생성 */
   color: #333; /* 글자색 설정 */
   font-size: 16px; /* 글자 크기 설정 */
+  font-weight: 500;
   margin: 20px 0; /* 위 아래 마진 설정 */
   background-color: #f3f3f3; /* 배경색 설정 */
   border-radius: 0 0 8px 8px; /* 모서리 둥글게 처리 */

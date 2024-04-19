@@ -364,10 +364,10 @@ function Table() {
   return (
     <div className="game-container">
       <div className="feedback">
-        <span>설문조사에 참여해주세요! </span>
+        {/* <span>설문조사에 참여해주세요! </span>
         <a href="#">
           <strong>구글 폼 바로가기→</strong>
-        </a>
+        </a> */}
       </div>
       <div className="upper-buttons">
         <button className="button" onClick={() => setIsInfoModalOpen(true)}>
