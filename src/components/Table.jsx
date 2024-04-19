@@ -11,7 +11,11 @@ const apiUrl = process.env.REACT_APP_API_URL;
 const usingWordSet = new Set();
 
 function Table() {
-  const size = 8;
+  const defaultSize = 8;
+  const defaultWallCount = 15;
+  const defaultStartLetterCount = 4;
+  const defaultMaxTurn = 20;
+
   const [dragStart, setDragStart] = useState(null);
   const [highlightedCells, setHighlightedCells] = useState([]);
   const [cells, setCells] = useState([]);
@@ -23,28 +27,25 @@ function Table() {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(true);
   const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
   const [toast, setToast] = useState(null); // 토스트 메시지 상태
-  const maxTurn = 21;
+  const [maxTurn, setMaxTurn] = useState(defaultMaxTurn);
 
-  useEffect(() => {
-    try {
-      axios.get(apiUrl, {
-        params: {
-          inputValue: "테스트",
-        },
-        headers: {
-          "x-api-key": apiKey,
-          "Content-Type": "application/json",
-        },
-      });
-    } catch (e) {}
+  const koreanCharacters =
+    "가개경고공과구국그기나노다대도동라레로리마만면명모무문물미민반바발보부비사산상새서선성소수스시신아양어에오우원유의이인일임자장전정적제주중지진조차천초카크코타트파포프하한해화호";
+
+  const initGame = (size, maxTurn, wallCount, startLetterCount) => {
+    usingWordSet.clear();
+    setCurrentPlayer(1);
+    setTurn(1);
+    setP1score(0);
+    setP2score(0);
+    setMaxTurn(maxTurn);
+
     const newCells = Array(size)
       .fill(null)
-      .map(() => Array(size).fill({ char: "", owner: 0 })); // owner를 -1로 초기화
-    const koreanCharacters =
-      "가개경고공과구국그기나노다대도동라레로리마만면명모무문물미민반바발보부비사산상새서선성소수스시신아양어에오우원유의이인일임자장전정적제주중지진조차천초카크코타트파포프하한해화호";
+      .map(() => Array(size).fill({ char: "", owner: 0 }));
     let positions = new Set();
 
-    while (positions.size < 4) {
+    while (positions.size < startLetterCount) {
       positions.add(Math.floor(Math.random() * size * size));
     }
 
@@ -60,9 +61,8 @@ function Table() {
     });
 
     let wallPositions = new Set();
-    let wallNumber = Math.floor(Math.random() * 3) + 9;
 
-    while (wallPositions.size < wallNumber) {
+    while (wallPositions.size < wallCount) {
       const randomNum = Math.floor(Math.random() * size * size);
       if (!positions.has(randomNum)) wallPositions.add(randomNum);
     }
@@ -77,16 +77,25 @@ function Table() {
     });
 
     setCells(newCells);
+  };
+
+  useEffect(() => {
+    initGame(
+      defaultSize,
+      defaultMaxTurn,
+      defaultWallCount,
+      defaultStartLetterCount
+    );
   }, []);
 
   const handleMouseDown = (row, col, owner) => {
-    if (turn === maxTurn) return;
+    if (turn === maxTurn + 1) return;
     setDragStart({ row, col, owner });
     setHighlightedCells([{ row, col, owner }]);
   };
 
   const handleMouseUp = () => {
-    if (turn === maxTurn) return;
+    if (turn === maxTurn + 1) return;
     if (dragStart) {
       highlightCells(dragStart, highlightedCells[highlightedCells.length - 1]);
       const set = new Set();
@@ -109,7 +118,7 @@ function Table() {
   };
 
   const handleMouseOver = (row, col) => {
-    if (turn === maxTurn) return;
+    if (turn === maxTurn + 1) return;
     if (dragStart) {
       if (dragStart.row === row || dragStart.col === col) {
         highlightCells(dragStart, { row, col });
@@ -118,13 +127,13 @@ function Table() {
   };
 
   const handleTouchStart = (e, row, col, owner) => {
-    if (turn === maxTurn) return;
+    if (turn === maxTurn + 1) return;
     setDragStart({ row, col, owner });
     setHighlightedCells([{ row, col, owner }]);
   };
 
   const handleTouchMove = (e) => {
-    if (turn === maxTurn) return;
+    if (turn === maxTurn + 1) return;
     if (dragStart) {
       const touch = e.touches[0];
       const target = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -137,7 +146,7 @@ function Table() {
   };
 
   const handleTouchEnd = () => {
-    if (turn === maxTurn) return;
+    if (turn === maxTurn + 1) return;
     if (dragStart && highlightedCells.length > 0) {
       highlightCells(dragStart, highlightedCells[highlightedCells.length - 1]);
       const set = new Set();
@@ -266,7 +275,7 @@ function Table() {
   };
 
   const handleNewGame = () => {
-    window.location.reload(); // 현재 페이지 새로고침
+    initGame();
   };
 
   const settingBoard = () => {
@@ -312,12 +321,13 @@ function Table() {
       <SettingModal
         isOpen={isSettingModalOpen}
         onClose={() => setIsSettingModalOpen(false)}
+        initGame={initGame}
       />
       <div
         className="status-bar"
         style={{
           backgroundColor:
-            turn >= maxTurn
+            turn >= maxTurn + 1
               ? "#f3f3f3"
               : currentPlayer === 1
               ? "#d0ebff"
@@ -325,8 +335,8 @@ function Table() {
         }}
       >
         {"["}
-        {turn >= maxTurn ? maxTurn - 1 : turn} / {maxTurn - 1}턴{"]"}
-        {turn === maxTurn
+        {turn >= maxTurn + 1 ? maxTurn : turn} / {maxTurn}턴{"]"}
+        {turn === maxTurn + 1
           ? " 게임 종료!"
           : " 유저 " + currentPlayer + "의 차례"}
       </div>
