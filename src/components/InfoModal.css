@@ -38,7 +38,6 @@ ul > li {
 
 ul > li:nth-child(2) {
   font-weight: 500;
-  margin-top: 1rem;
   color: #000;
 }
 

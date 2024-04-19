@@ -1,9 +1,17 @@
 // InfoModal.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./InfoModal.css"; // 스타일 파일, 필요에 따라 수정
 
 function InfoModal({ isOpen, onClose }) {
-  const [page, setPage] = useState(0);
+  const minPage = 1;
+  const maxPage = 4;
+  const [page, setPage] = useState(minPage);
+
+  useEffect(() => {
+    if (isOpen) {
+      setPage(minPage);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -15,28 +23,39 @@ function InfoModal({ isOpen, onClose }) {
         </span>
         <h2>낱말로 즐기는 보드게임, 끄땅!</h2>
         <ul>
-          {page === 0 && (
+          {page === 1 && (
+            <>
+              <li>
+                <img src="/tuto/tutorial-demo.gif" alt="tutorial 1" />
+              </li>
+              <li>끄땅은 보드에 단어를 입력하여 땅을 차지하는 게임입니다.</li>
+              <li>
+                * 현재는 온라인 대결이 안되고, 두 명이 한 기기로 해야 해요.
+              </li>
+            </>
+          )}
+          {page === 2 && (
             <>
               <li>
                 <img src="/tuto/1.png" alt="tutorial 1" />
               </li>
-              <li>1. 낱말을 작성할 칸들을 순서대로 드래그해주세요.</li>
-              <li>* 빈 칸을 적어도 하나 선택해야해요.</li>
-              <li>* 자신이 사용했거나 녹색인 칸을 반드시 포함해야해요.</li>
-              <li>* 벽이나 상대가 선택한 칸을 지나가면 안돼요.</li>
+              <li>1. 단어를 입력할 칸을 순서대로 드래그해주세요.</li>
+              <li>* 자신의 칸이나 녹색인 칸을 포함해야 해요.</li>
+              <li>* 벽이나 상대의 칸을 포함하면 안돼요.</li>
+              <li>* 빈 칸을 하나 이상 선택해야 해요.</li>
             </>
           )}
-          {page === 1 && (
+          {page === 3 && (
             <>
               <li>
                 <img src="/tuto/2.png" alt="tutorial 2" />
               </li>
               <li>2. 원하는 단어를 입력해주세요.</li>
-              <li>* 1글자이거나 DB에 없는 단어는 쓸 수 없어요.</li>
+              <li>* DB에 없는 단어는 쓸 수 없어요.</li>
               <li>* 이미 작성된 글자를 무시할 수 없어요.</li>
             </>
           )}
-          {page === 2 && (
+          {page === 4 && (
             <>
               <li>
                 <img src="/tuto/3.png" alt="tutorial 2" />
@@ -55,7 +74,7 @@ function InfoModal({ isOpen, onClose }) {
           </div>
           <div
             onClick={
-              page === 2
+              page === maxPage
                 ? () => {
                     setPage(0);
                     onClose();
@@ -64,7 +83,7 @@ function InfoModal({ isOpen, onClose }) {
             }
             style={{ cursor: "pointer" }}
           >
-            {page === 2 ? "알겠어요" : "다음"}
+            {`${page === maxPage ? "알겠어요" : "다음"} (${page}/${maxPage})`}
           </div>
         </div>
       </div>
