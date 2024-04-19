@@ -37,7 +37,34 @@ function Table() {
   const koreanCharacters =
     "가개경고공과구국그기나노다대도동라레로리마만면명모무문물미민반바발보부비사산상새서선성소수스시신아양어에오우원유의이인일임자장전정적제주중지진조차천초카크코타트파포프하한해화호";
 
+  const minSize = 6;
+  const maxSize = 20;
+
+  const minMaxTurn = 8;
+  const maxMaxTurn = 40;
+
   const initGame = (_size, _maxTurn, _wallCount, _startLetterCount) => {
+    if (_size < minSize || _size > maxSize) {
+      alert(`맵 크기는 ${minSize}이상, ${maxSize}이하여야 합니다.`);
+      return -1;
+    }
+    if (_maxTurn < minMaxTurn || _maxTurn > maxMaxTurn) {
+      alert(`턴 제한은 ${minMaxTurn}이상, ${maxMaxTurn}이하여야 합니다.`);
+      return -1;
+    }
+    if (_wallCount < 0) {
+      alert(`벽 개수는 음수일 수 없습니다.`);
+      return -1;
+    }
+    if (_startLetterCount < 1) {
+      alert(`시작 글자 수는 1 이상이여야 합니다.`);
+      return -1;
+    }
+    if (_wallCount + _startLetterCount > _size * _size * 0.5) {
+      alert(`벽의 개수와 시작 글자 수가 너무 큽니다.`);
+      return -1;
+    }
+
     usingWordSet.clear();
     setCurrentPlayer(1);
     setTurn(1);

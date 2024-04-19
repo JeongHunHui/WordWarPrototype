@@ -11,8 +11,7 @@ function SettingModal({ isOpen, onClose, initGame }) {
 
   const handleSubmit = () => {
     // initGame 함수를 업데이트하려면 size, maxTurn, wallCount, startLetterCount를 인자로 받아야 함
-    initGame(size, maxTurn, wallCount, startLetterCount);
-    onClose(); // 모달 닫기
+    if (initGame(size, maxTurn, wallCount, startLetterCount) !== -1) onClose(); // 모달 닫기
   };
 
   return (
