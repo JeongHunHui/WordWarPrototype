@@ -11,10 +11,10 @@ const apiUrl = process.env.REACT_APP_API_URL;
 const usingWordSet = new Set();
 
 function Table() {
-  const defaultSize = 8;
-  const defaultWallCount = 15;
-  const defaultStartLetterCount = 4;
-  const defaultMaxTurn = 20;
+  const defaultSize = 10;
+  const defaultWallCount = 20;
+  const defaultStartLetterCount = 5;
+  const defaultMaxTurn = 30;
 
   const [dragStart, setDragStart] = useState(null);
   const [highlightedCells, setHighlightedCells] = useState([]);
@@ -352,6 +352,10 @@ function Table() {
         isOpen={isSettingModalOpen}
         onClose={() => setIsSettingModalOpen(false)}
         initGame={initGame}
+        _size={size}
+        _maxTurn={maxTurn}
+        _wallCount={wallCount}
+        _startLetterCount={startLetterCount}
       />
       <div
         className="status-bar"

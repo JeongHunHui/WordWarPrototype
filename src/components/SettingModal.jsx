@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import "./SettingModal.css"; // 스타일 파일, 필요에 따라 수정
 
-function SettingModal({ isOpen, onClose, initGame }) {
-  const [size, setSize] = useState(8);
-  const [maxTurn, setMaxTurn] = useState(20);
-  const [wallCount, setWallCount] = useState(10);
-  const [startLetterCount, setStartLetterCount] = useState(4);
+function SettingModal({
+  isOpen,
+  onClose,
+  initGame,
+  _size,
+  _maxTurn,
+  _wallCount,
+  _startLetterCount,
+}) {
+  const [size, setSize] = useState(_size);
+  const [maxTurn, setMaxTurn] = useState(_maxTurn);
+  const [wallCount, setWallCount] = useState(_wallCount);
+  const [startLetterCount, setStartLetterCount] = useState(_startLetterCount);
 
   if (!isOpen) return null;
 

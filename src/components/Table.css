@@ -64,8 +64,8 @@
 
 .tableCell {
   margin: 1px;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   background-color: #fafafa; /* 기본 배경색 */
   user-select: none; /* 텍스트 선택 방지 */
   font-size: 16px; /* 글자 크기 설정 */
